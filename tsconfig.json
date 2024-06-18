@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "lib": ["es2022", "DOM", "DOM.Iterable"],
+    "moduleDetection": "force",
+    "moduleResolution": "node",
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "checkJs": true,
+    "jsx": "react-jsx",
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "./dist",
+    "rootDir": "./src"
+
+    // "baseUrl": ".",
+    // "paths": {
+    //   // "@src": ["src/*"],
+    //   "@routes": ["src/routes/*"],
+    //   "@model": ["src/models/*"],
+    //   "@middlewares": ["src/middlewares/*"]
+    // }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
