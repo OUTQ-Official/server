@@ -8,5 +8,9 @@ const router: Router = Router();
 router.use('/auth', AuthRouter);
 router.use('/search', SearchRouter);
 router.use('/partners', PartnersRouter);
+router.get('/', (req, res) => {
+  console.log('hello world');
+  res.send('hello world');
+});
 
 export default router;
