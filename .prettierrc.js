@@ -10,5 +10,5 @@ module.exports = {
   endOfLine: 'auto', // OS에 따른 코드라인 끝 처리 방식 사용
   importOrderSeparation: false, //import 각 범주마다 공백을 줄지 말지
   useTabs: false, // 탭 대신 공백으로 들여쓰기
-  tabWidth: 2, // 들여쓰기 공백 수
+  tabWidth: 2, // 들여쓰기 공백
 };
