@@ -6,7 +6,6 @@ import mongoose, { ObjectId } from 'mongoose';
 type RegistrationTypes = 'local' | 'kakao' | 'google';
 
 export interface UserSchemaTypes extends Document {
-  id: string;
   email: string;
   password: string;
   username: string;
@@ -16,10 +15,9 @@ export interface UserSchemaTypes extends Document {
 }
 
 const userSchema = new mongoose.Schema<UserSchemaTypes>({
-  id: { type: String, unique: true },
   email: { type: String, unique: true },
-  username: { type: String },
   password: { type: String, minLength: 8 },
+  username: { type: String },
   registrationType: { type: String },
   refreshToken: { type: String },
   portfolio_id_list: { type: [String] },

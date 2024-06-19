@@ -61,7 +61,6 @@ const getGoogleAccessToken = async (code: string): Promise<ServiceResponseType<g
 };
 
 interface getGoogleLoginResponseType {
-  id: string;
   email: string;
   name: string;
   picture: string;
@@ -88,7 +87,7 @@ const postGoogleLogin = async (code: string): Promise<ServiceResponseType<getGoo
     return { status: false, statusCode: httpStatusCode.INTERNAL_SERVER_ERROR, message: '구글유저 정보 불러오기 실패' };
   }
 
-  const { id, email, name, picture } = googleUserInfo.data;
+  const { email, name, picture } = googleUserInfo.data;
 
   //초기로그인이라면 회원가입까지 진행
   const registeredUser = authRepository.getRegisteredUser(email);
@@ -97,7 +96,6 @@ const postGoogleLogin = async (code: string): Promise<ServiceResponseType<getGoo
     const refreshToken = jwt.refresh();
 
     const { status, statusCode, message } = await authRepository.createUser({
-      id: id,
       email: email,
       password: 'google-login',
       username: name,
@@ -119,7 +117,7 @@ const postGoogleLogin = async (code: string): Promise<ServiceResponseType<getGoo
     status: true,
     statusCode: httpStatusCode.OK,
     message: '구글 로그인 성공',
-    data: { id: id, email: email, name: name, picture: picture },
+    data: { email: email, name: name, picture: picture },
   };
 };
 
@@ -193,7 +191,6 @@ const postKakaoLogin = async (code: string): Promise<ServiceResponseType<getGoog
     const refreshToken = jwt.refresh();
 
     const { status, statusCode, message } = await authRepository.createUser({
-      id: id,
       email: id,
       password: 'kakao-login',
       username: nickname,
@@ -215,7 +212,7 @@ const postKakaoLogin = async (code: string): Promise<ServiceResponseType<getGoog
     status: true,
     statusCode: httpStatusCode.OK,
     message: '카카오 로그인 성공',
-    data: { id: id, email: id, name: nickname, picture: thumbnail_image },
+    data: { email: 'kakao', name: nickname, picture: thumbnail_image },
   };
 };
 
@@ -237,10 +234,8 @@ const postLocalSignup = async (email: string, password: string, username: string
   const refreshToken = jwt.refresh();
 
   const salt = bcrypt.genSaltSync(10);
-  const uuid = uuidv4();
 
   const { status, statusCode, message } = await authRepository.createUser({
-    id: uuid,
     email: email,
     password: bcrypt.hashSync(password, salt),
     username: username,
