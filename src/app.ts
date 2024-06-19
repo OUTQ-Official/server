@@ -37,10 +37,9 @@ app.use(
     origin: 'http://localhost:3000',
   })
 );
-// app.use(corsMiddleware(corsOriginList));
 
 //절대경로 설정
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, '../public')));
 
 //데이터 베이스 연결
 if (process.env.MONGO_URI) {

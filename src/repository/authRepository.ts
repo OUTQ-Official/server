@@ -11,7 +11,7 @@ const getRegisteredUser = async (email: string): Promise<UserSchemaTypes | null>
 const createUser = async (newUserData: UserSchemaTypes): Promise<ServiceResponseType> => {
   try {
     const newUser = await UserModel.create(newUserData);
-    console.log(newUser);
+
     return { status: true, statusCode: httpStatusCode.OK, message: '새로운 유저 DB저장 성공' };
   } catch (error: any) {
     console.log(error);

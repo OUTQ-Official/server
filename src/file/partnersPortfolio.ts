@@ -1,23 +1,6 @@
-// import multer from 'multer';
+import { v4 } from 'uuid';
 import multer from 'multer';
 import path from 'path';
-
-// const partnersPortfolioMulter = multer({
-//   storage: multer.diskStorage({
-//     filename(req, file, done) {
-//       console.log('filename');
-//       console.log(req);
-//       console.log(file);
-//       done(null, file.originalname);
-//     },
-//     destination(req, file, done) {
-//       console.log('destination');
-//       console.log(req);
-//       console.log(file);
-//       done(null, path.join(__dirname, 'public'));
-//     },
-//   }),
-// }).single('uploaded');
 
 const partnersPortfolioMulter = multer({
   storage: multer.diskStorage({
@@ -25,8 +8,11 @@ const partnersPortfolioMulter = multer({
       done(null, path.join(__dirname, '../../public/images/portfolios'));
     },
     filename(req, file, done) {
-      const ext = path.extname(file.originalname);
-      done(null, path.basename(file.originalname, ext) + ext);
+      let id = v4();
+      let now = new Date();
+      let fileName = `${id}${now.getSeconds()}${file.originalname}`;
+
+      done(null, fileName);
     },
   }),
   limits: { fileSize: 5 * 1024 * 1024 },

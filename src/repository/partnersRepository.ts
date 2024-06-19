@@ -12,7 +12,7 @@ const createPortfolio = async (
     const newPortfolio = await PortfolioModel.create({
       user_id: userId,
       portfolio_title: title,
-      portfolio_image_url: image.path,
+      portfolio_image_url: image.filename,
     });
 
     return {

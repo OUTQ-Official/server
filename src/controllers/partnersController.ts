@@ -9,9 +9,7 @@ const createPortfolio = async (req: Request, res: Response) => {
   const { email } = req.headers;
 
   try {
-    const { status, statusCode, message, data } = await partnersService.createPortfolio(title, image, email);
-
-    console.log(data);
+    const { status, statusCode, message } = await partnersService.createPortfolio(title, image, email);
 
     status ? res.send(success(statusCode, message)) : res.send(fail(statusCode, message));
   } catch (error: any) {

@@ -5,7 +5,7 @@ import { ServiceResponseType } from '../types/response';
 const createItem = async (newItemData: ItemSchemaTypes): Promise<ServiceResponseType> => {
   try {
     const newItem = await ItemModel.create(newItemData);
-    console.log(newItem);
+
     return { status: true, statusCode: httpStatusCode.OK, message: '새로운 아이템 DB저장 성공' };
   } catch (error: any) {
     console.log(error);
