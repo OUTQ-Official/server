@@ -1,0 +1,44 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Connect deploy key
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          project: ruddyh7076/qutq
+          stage: main
+          yaml: >
+            name: server
+
+            app: node@21
+
+            options:
+              env:
+                - name: NODE_ENV
+                  value: production
+                - name: MONGO_URI
+                  value: mongodb+srv://ruddyh7076:vhwzIFlEvXHit5IN@cluster0.2icjzgw.mongodb.net/
+                - name: JWT_SECRET_KEY
+                  value: 65ce7e85ec2c541df0c5437cc6be34f84b21e4182e992611e0d225743a3ca8aad91c4567f85b833c040b8920e97f3d9c3e4971bbf2f18a04f108e6cb88dcff69
+              ports: "8080"
+              install: yarn
+              build: yarn build
+              start: yarn start
+              buildenv: []
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
