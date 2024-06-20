@@ -1,12 +1,12 @@
+import jwt from '../../legacy/utils/jwt';
 import UserDAL from './UserDAL';
-import { UserLoginDTO, UserLoginResultDTO } from './UserDTO';
+import { GoogleLoginUserDTO, GoogleLoginUserResultDTO, LocalLoginUserDTO, LocalLoginUserResultDTO } from './UserDTO';
 import bcrypt from 'bcrypt';
 
-const loginWithLocal = async (loginDTO: UserLoginDTO): Promise<UserLoginResultDTO> => {
+const loginWithLocal = async (loginDTO: LocalLoginUserDTO): Promise<LocalLoginUserResultDTO> => {
   try {
     //유저가입여부 확인
     const user = await UserDAL.getUserInfoByEmail(loginDTO.email);
-    console.log(user);
 
     //ERROR -> 존재하지 않는유저
     if (!user) throw Error;
@@ -19,7 +19,7 @@ const loginWithLocal = async (loginDTO: UserLoginDTO): Promise<UserLoginResultDT
     if (!isMatch) throw Error;
 
     //로그인 성공
-    const result: UserLoginResultDTO = {
+    const result: LocalLoginUserResultDTO = {
       _id: user._id,
       username: user.username,
     };
@@ -30,8 +30,38 @@ const loginWithLocal = async (loginDTO: UserLoginDTO): Promise<UserLoginResultDT
   }
 };
 
-const loginWithGoogle = async (code: string) => {
-  
+const loginWithGoogle = async (loginDTO: GoogleLoginUserDTO): Promise<GoogleLoginUserResultDTO> => {
+  try {
+    //유저가입여부 확인
+    const user = await UserDAL.getUserInfoByEmail(loginDTO.email);
+
+    //존재하지 않는경우 회원가입 시키기
+    if (!user) {
+      const newUser = await UserDAL.createUser({
+        email: loginDTO.email,
+        password: 'null-password',
+        username: loginDTO.name,
+        registrationType: 'google',
+        portfolio_id_list: [],
+        refreshToken: jwt.refresh(),
+      });
+
+      const result: GoogleLoginUserResultDTO = {
+        _id: newUser._id,
+        username: newUser.username,
+      };
+      return result;
+    }
+    
+    //로그인 성공
+    const result: GoogleLoginUserResultDTO = {
+      _id: user._id,
+      username: user.username,
+    };
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const UserService = { loginWithLocal, loginWithGoogle };

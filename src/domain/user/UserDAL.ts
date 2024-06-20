@@ -1,7 +1,16 @@
 import { ObjectId } from 'mongoose';
 import UserModel, { UserSchemaTypes } from './UserModel';
 
-const createUser = async () => {};
+const createUser = async (userInfo: UserSchemaTypes): Promise<UserSchemaTypes> => {
+  try {
+    const user = await UserModel.create({
+      ...userInfo,
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const getUserInfoById = async (id: ObjectId): Promise<UserSchemaTypes | null> => {
   try {
