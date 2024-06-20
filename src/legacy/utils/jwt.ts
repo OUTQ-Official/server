@@ -1,12 +1,13 @@
 import jsonwebtoken from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { ObjectId } from 'mongoose';
 dotenv.config();
 
-const sign = (email: string) => {
+const sign = (_id: ObjectId) => {
   if (!process.env.JWT_SECRET_KEY) return '';
 
   const payload = {
-    email: email,
+    _id: _id,
   };
 
   return jsonwebtoken.sign(payload, process.env.JWT_SECRET_KEY, {

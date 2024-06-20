@@ -1,10 +1,11 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import mongoose from 'mongoose';
-import router from './domain/rouetr';
+import Mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import router from './routes';
 
 dotenv.config();
 
@@ -16,7 +17,10 @@ dotenv.config({
 });
 
 const app = express();
+const PORT = 8080;
+
 const corsOriginList = ['http://localhost:3000', 'http://localhost:8080'];
+
 const corsOptions = {
   origin: corsOriginList,
   credentials: true,
@@ -39,8 +43,7 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
 
 //데이터 베이스 연결
 if (process.env.MONGO_URI) {
-  mongoose
-    .connect(process.env.MONGO_URI)
+  Mongoose.connect(process.env.MONGO_URI)
     .then(() => {
       console.log('Mongodb connected');
     })
@@ -51,4 +54,10 @@ if (process.env.MONGO_URI) {
 
 app.use('/', router);
 
-export default app;
+app.listen(PORT, () => {
+  console.log(`
+    #############################################
+        🛡️ Server listening on port: ${PORT} 🛡️
+    #############################################
+    `);
+});
