@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import jwt from '../utils/jwt';
+import jwt from '../../global/utils/jwt';
 
 const validateAccessToken = (req: Request, res: Response, next: NextFunction) => {
   try {

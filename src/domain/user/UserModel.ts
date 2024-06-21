@@ -1,5 +1,5 @@
-import { Document } from 'mongodb';
-import mongoose, { ObjectId } from 'mongoose';
+import { Document, ObjectId } from 'mongodb';
+import mongoose, { Schema } from 'mongoose';
 
 // const bcrypt = require('bcrypt');
 
@@ -23,6 +23,16 @@ const userSchema = new mongoose.Schema<UserSchemaTypes>({
   portfolio_id_list: { type: [String] },
 });
 
-const UserModel = mongoose.model('User', userSchema);
+export const UserModel = mongoose.model('User', userSchema);
 
-export default UserModel;
+export interface TokenSchemaTypes {
+  refreshToken: string;
+  userId: ObjectId;
+}
+
+const tokenSchema = new mongoose.Schema<TokenSchemaTypes>({
+  refreshToken: { type: String, unique: true },
+  userId: { type: Schema.ObjectId, unique: true },
+});
+
+export const TokenModel = mongoose.model('Token', tokenSchema);

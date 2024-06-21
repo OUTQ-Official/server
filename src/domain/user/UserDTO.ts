@@ -1,5 +1,17 @@
 import { ObjectId } from 'mongoose';
 
+export interface SignupDTO {
+  email: string;
+  password: string;
+  username: string;
+}
+
+export interface SignupResultDTO {
+  _id: ObjectId;
+  username: string;
+  refreshToken: string;
+}
+
 export interface LocalLoginUserDTO {
   email: string;
   password: string;
@@ -8,6 +20,7 @@ export interface LocalLoginUserDTO {
 export interface LocalLoginUserResultDTO {
   _id: ObjectId;
   username: string;
+  refreshToken: string;
 }
 
 export interface GoogleLoginUserDTO {
@@ -23,4 +36,5 @@ export interface GoogleLoginUserDTO {
 export interface GoogleLoginUserResultDTO {
   _id: ObjectId;
   username: string;
+  refreshToken: string;
 }

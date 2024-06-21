@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import authService from '../services/authService';
 import { fail, success } from '../utils/responseMessage';
 import { httpStatusCode } from '../constant/statusCode';
-import jwt from '../utils/jwt';
+import jwt from '../../global/utils/jwt';
 
 const postLocalLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;

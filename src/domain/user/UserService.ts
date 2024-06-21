@@ -1,69 +1,107 @@
-import jwt from '../../legacy/utils/jwt';
+import jwt from '../../global/utils/jwt';
 import UserDAL from './UserDAL';
-import { GoogleLoginUserDTO, GoogleLoginUserResultDTO, LocalLoginUserDTO, LocalLoginUserResultDTO } from './UserDTO';
+import {
+  GoogleLoginUserDTO,
+  GoogleLoginUserResultDTO,
+  LocalLoginUserDTO,
+  LocalLoginUserResultDTO,
+  SignupDTO,
+  SignupResultDTO,
+} from './UserDTO';
 import bcrypt from 'bcrypt';
+import { TokenSchemaTypes } from './UserModel';
+
+const signup = async (signupDTO: SignupDTO): Promise<SignupResultDTO> => {
+  console.log(signupDTO);
+  try {
+    const refreshToken = jwt.refresh();
+    const newUser = await UserDAL.createUser({
+      email: signupDTO.email,
+      password: signupDTO.password,
+      username: signupDTO.username,
+      registrationType: 'local',
+      portfolio_id_list: [],
+      refreshToken: refreshToken,
+    });
+
+    const tokenInfo: TokenSchemaTypes = {
+      refreshToken: refreshToken,
+      userId: newUser._id,
+    };
+
+    UserDAL.createTokenInfo(tokenInfo);
+
+    const result: SignupResultDTO = {
+      _id: newUser._id,
+      username: newUser.username,
+      refreshToken: newUser.refreshToken,
+    };
+    return result;
+  } catch (error) {
+    throw new Error(`UserService/signup Erorr : ${error}`);
+  }
+};
 
 const loginWithLocal = async (loginDTO: LocalLoginUserDTO): Promise<LocalLoginUserResultDTO> => {
   try {
-    //유저가입여부 확인
-    const user = await UserDAL.getUserInfoByEmail(loginDTO.email);
+    const foundUser = await UserDAL.getUserInfoByEmail(loginDTO.email);
 
-    //ERROR -> 존재하지 않는유저
-    if (!user) throw Error;
-    // if (!user) throw new LoginIDNonExists(rm.INVALID_ID); //! 존재하지 않는 ID
+    if (!foundUser) throw Error('존재하지 않는 회원');
 
-    //비밀번호 체크
-    const isMatch = await bcrypt.compare(loginDTO.password, user.password);
+    const isMatch = await bcrypt.compare(loginDTO.password, foundUser.password);
 
-    //ERROR -> 비밀번호 불일치
     if (!isMatch) throw Error;
 
-    //로그인 성공
     const result: LocalLoginUserResultDTO = {
-      _id: user._id,
-      username: user.username,
+      _id: foundUser._id,
+      username: foundUser.username,
+      refreshToken: foundUser.refreshToken,
     };
 
     return result;
   } catch (error) {
-    throw error;
+    throw new Error(`UserService/loginWithLocal Erorr : ${error}`);
   }
 };
 
 const loginWithGoogle = async (loginDTO: GoogleLoginUserDTO): Promise<GoogleLoginUserResultDTO> => {
   try {
     //유저가입여부 확인
-    const user = await UserDAL.getUserInfoByEmail(loginDTO.email);
+    let user = await UserDAL.getUserInfoByEmail(loginDTO.email);
 
     //존재하지 않는경우 회원가입 시키기
     if (!user) {
+      const refreshToken = jwt.refresh();
       const newUser = await UserDAL.createUser({
         email: loginDTO.email,
         password: 'null-password',
         username: loginDTO.name,
         registrationType: 'google',
         portfolio_id_list: [],
-        refreshToken: jwt.refresh(),
+        refreshToken: refreshToken,
       });
 
-      const result: GoogleLoginUserResultDTO = {
-        _id: newUser._id,
-        username: newUser.username,
+      const tokenInfo: TokenSchemaTypes = {
+        refreshToken: refreshToken,
+        userId: newUser._id,
       };
-      return result;
+
+      UserDAL.createTokenInfo(tokenInfo);
+      user = { ...newUser };
     }
-    
+
     //로그인 성공
     const result: GoogleLoginUserResultDTO = {
       _id: user._id,
       username: user.username,
+      refreshToken: user.refreshToken,
     };
     return result;
   } catch (error) {
-    throw error;
+    throw new Error(`UserService/loginWithGoogle Erorr : ${error}`);
   }
 };
 
-const UserService = { loginWithLocal, loginWithGoogle };
+const UserService = { loginWithLocal, loginWithGoogle, signup };
 
 export default UserService;

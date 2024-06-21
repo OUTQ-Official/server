@@ -4,7 +4,7 @@ import { httpStatusCode } from '../constant/statusCode';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import authRepository from '../repository/authRepository';
-import jwt from '../utils/jwt';
+import jwt from '../../global/utils/jwt';
 
 const postLocalLogin = async (email: string, password: string): Promise<ServiceResponseType> => {
   if (!email || !password) {
