@@ -32,7 +32,7 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
     return res
       .status(StatusCodes.OK)
       .cookie('refreshToken', refreshToken)
-      .send(success(StatusCodes.OK, RES_MSG.SIGNIN_SUCCESS, result));
+      .send(success(StatusCodes.OK, RES_MSG.SIGNUP_SUCCESS, result));
   } catch (error) {
     return next(error);
   }

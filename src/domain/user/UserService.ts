@@ -38,7 +38,7 @@ const signup = async (signupDTO: SignupDTO): Promise<SignupResultDTO> => {
     };
     return result;
   } catch (error) {
-    throw new Error(`UserService/signup Erorr : ${error}`);
+    throw new Error(`[UserService/signup] Erorr : ${error}`);
   }
 };
 
@@ -46,11 +46,11 @@ const loginWithLocal = async (loginDTO: LocalLoginUserDTO): Promise<LocalLoginUs
   try {
     const foundUser = await UserDAL.getUserInfoByEmail(loginDTO.email);
 
-    if (!foundUser) throw Error('존재하지 않는 회원');
+    if (!foundUser) throw new Error('[UserService/localWithLocal] Error : 존재하지 않는 회원');
 
     const isMatch = await bcrypt.compare(loginDTO.password, foundUser.password);
 
-    if (!isMatch) throw Error;
+    if (!isMatch) throw new Error('[UserService/localWithLocal] Error : 비밀번호 불일치');
 
     const result: LocalLoginUserResultDTO = {
       _id: foundUser._id,
@@ -60,7 +60,7 @@ const loginWithLocal = async (loginDTO: LocalLoginUserDTO): Promise<LocalLoginUs
 
     return result;
   } catch (error) {
-    throw new Error(`UserService/loginWithLocal Erorr : ${error}`);
+    throw new Error(`[UserService/loginWithLocal] Erorr : ${error}`);
   }
 };
 
@@ -98,7 +98,7 @@ const loginWithGoogle = async (loginDTO: GoogleLoginUserDTO): Promise<GoogleLogi
     };
     return result;
   } catch (error) {
-    throw new Error(`UserService/loginWithGoogle Erorr : ${error}`);
+    throw new Error(`[UserService/loginWithGoogle] Erorr : ${error}`);
   }
 };
 

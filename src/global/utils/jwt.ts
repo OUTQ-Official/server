@@ -16,7 +16,7 @@ const sign = (payload: JWTPayloadType) => {
       expiresIn: '2h',
     });
   } catch (error) {
-    throw new Error(`엑세스 토큰 발급 실패 : ${error}`);
+    throw new Error(`[JWT/sign] Error : ${error}`);
   }
 };
 
@@ -26,7 +26,7 @@ const verify = (token: string) => {
 
     return decoded;
   } catch (error) {
-    throw new Error(`엑세스 토큰 인증 실패 : ${error}`);
+    throw new Error(`[JWT/verify] Error : ${error}`);
   }
 };
 
@@ -37,7 +37,7 @@ const refresh = () => {
       expiresIn: '14d',
     });
   } catch (error) {
-    throw new Error(`리프레쉬 토큰 생성 실패 : ${error}`);
+    throw new Error(`[JWT/refresh] Error : ${error}`);
   }
 };
 

@@ -31,7 +31,7 @@ const authenGoogleClient = async (req: Request, res: Response, next: NextFunctio
   try {
     const accessToken = req.headers.accessToken;
 
-    if (!accessToken) throw Error;
+    if (!accessToken) throw new Error('[UserMiddleware/authenGoogleClient] Error : 구글 엑세스 토큰 발급실패');
 
     const GOOGLE_USERINFO_URL = 'https://www.googleapis.com/oauth2/v2/userinfo';
 
