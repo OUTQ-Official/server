@@ -12,12 +12,13 @@ import bcrypt from 'bcrypt';
 import { TokenSchemaTypes } from './UserModel';
 
 const signup = async (signupDTO: SignupDTO): Promise<SignupResultDTO> => {
-  console.log(signupDTO);
+  const salt = bcrypt.genSaltSync(10);
+
   try {
     const refreshToken = jwt.refresh();
     const newUser = await UserDAL.createUser({
       email: signupDTO.email,
-      password: signupDTO.password,
+      password: bcrypt.hashSync(signupDTO.password, salt),
       username: signupDTO.username,
       registrationType: 'local',
       portfolio_id_list: [],
