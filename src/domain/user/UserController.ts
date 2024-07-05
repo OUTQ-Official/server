@@ -12,6 +12,7 @@ import jwt from '../../global/utils/jwt';
 import { StatusCodes } from 'http-status-codes';
 import { success } from '../../global/constant/response';
 import { RES_MSG } from '../../global/constant';
+import { cookieConfigs } from '../../global/config/cookies';
 
 const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -34,6 +35,7 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
       .cookie('refreshToken', refreshToken)
       .send(success(StatusCodes.OK, RES_MSG.SIGNUP_SUCCESS, result));
   } catch (error) {
+    //에러 반환 응답 추가
     return next(error);
   }
 };
@@ -70,6 +72,7 @@ const loginWithLocal = async (req: Request, res: Response, next: NextFunction) =
       .cookie('refreshToken', refreshToken)
       .send(success(StatusCodes.OK, RES_MSG.SIGNIN_SUCCESS, result));
   } catch (error) {
+    //에러 반환 응답 추가
     return next(error);
   }
 };
@@ -90,13 +93,23 @@ const loginWithGoogle = async (req: Request, res: Response, next: NextFunction) 
 
     return res
       .status(StatusCodes.OK)
-      .cookie('refreshToken', refreshToken)
+      .cookie('refreshToken', refreshToken, cookieConfigs)
       .send(success(StatusCodes.OK, RES_MSG.SIGNIN_SUCCESS, result));
   } catch (error) {
+    //에러 반환 응답 추가
     return next(error);
   }
 };
 
-const UserController = { loginWithLocal, loginWithGoogle, signup };
+const refreshAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log(req);
+  } catch (error) {
+    //에러 반환 응답 추가
+    return next(error);
+  }
+};
+
+const UserController = { loginWithLocal, loginWithGoogle, signup, refreshAccessToken };
 
 export default UserController;

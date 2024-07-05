@@ -5,7 +5,12 @@ import ValidationMiddleware from '../../global/middleware/validation';
 
 const router: Router = Router();
 
-router.post('/signup', UserController.signup);
+router.post(
+  '/signup',
+  ValidationMiddleware.UserValidation.checkEmailForm,
+  ValidationMiddleware.UserValidation.checkPasswordForm,
+  UserController.signup
+);
 router.post('/login', UserController.loginWithLocal);
 router.post(
   '/oauth/google',
@@ -13,8 +18,8 @@ router.post(
   UserMiddleWare.authenGoogleClient,
   UserController.loginWithGoogle
 );
-router.get('/refresh');
+router.get('/auth/refresh', ValidationMiddleware.UserValidation.checkRefreshToken, UserController.refreshAccessToken);
 
-router.post('/profile', ValidationMiddleware.AuthJWT.validateAccessToken);
+router.post('/profile', ValidationMiddleware.UserValidation.checkAccessToken);
 
 export default router;

@@ -93,7 +93,7 @@ const postGoogleLogin = async (code: string): Promise<ServiceResponseType<getGoo
   const registeredUser = authRepository.getRegisteredUser(email);
 
   if (!registeredUser) {
-    const refreshToken = jwt.refresh();
+    const refreshToken = jwt.refresh({email});
 
     const { status, statusCode, message } = await authRepository.createUser({
       email: email,

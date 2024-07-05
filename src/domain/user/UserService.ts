@@ -15,7 +15,7 @@ const signup = async (signupDTO: SignupDTO): Promise<SignupResultDTO> => {
   const salt = bcrypt.genSaltSync(10);
 
   try {
-    const refreshToken = jwt.refresh();
+    const refreshToken = jwt.refresh({ email: signupDTO.email });
     const newUser = await UserDAL.createUser({
       email: signupDTO.email,
       password: bcrypt.hashSync(signupDTO.password, salt),
@@ -72,7 +72,8 @@ const loginWithGoogle = async (loginDTO: GoogleLoginUserDTO): Promise<GoogleLogi
 
     //존재하지 않는경우 회원가입 시키기
     if (!user) {
-      const refreshToken = jwt.refresh();
+      const refreshToken = jwt.refresh({ email: loginDTO.email });
+
       const newUser = await UserDAL.createUser({
         email: loginDTO.email,
         password: 'null-password',
@@ -102,6 +103,9 @@ const loginWithGoogle = async (loginDTO: GoogleLoginUserDTO): Promise<GoogleLogi
     throw new Error(`[UserService/loginWithGoogle] Erorr : ${error}`);
   }
 };
+
+//Token관련
+const refreshAccessToken = async () => {};
 
 const UserService = { loginWithLocal, loginWithGoogle, signup };
 

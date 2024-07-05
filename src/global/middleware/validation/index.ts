@@ -1,9 +1,8 @@
-import * as AuthJWT from './authJWT';
-import * as Login from './login';
+import UserValidation  from "./user";
+
 
 const ValidationMiddleware = {
-  AuthJWT,
-  Login,
+  UserValidation,
 };
 
 export default ValidationMiddleware;
