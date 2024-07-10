@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { LoginRequestDTO } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
-  login() {
-    return 'login';
+  async login(body: LoginRequestDTO) {
+    return body;
   }
 
   signup() {

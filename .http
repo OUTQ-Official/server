@@ -7,4 +7,11 @@ GET {{baseUrl}}
 
 #로컬 로그인
 POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "name" : "H",
+  "contents" : "content test"
+}
+
 ###
