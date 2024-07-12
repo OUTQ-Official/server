@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { GoogleStrategy } from './strategies/google-auth.strategy';
+import { GoogleAuthGuard } from './guard/google-auth.guard';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, GoogleStrategy],
 })
 export class AuthModule {}
