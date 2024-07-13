@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './strategies/google-auth.strategy';
-import { GoogleAuthGuard } from './guard/google-auth.guard';
+import { PassportModule } from '@nestjs/passport';
+import { UsersService } from '../users/users.service';
 
 @Module({
+  imports: [PassportModule],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy],
+  providers: [AuthService, GoogleStrategy, UsersService],
 })
 export class AuthModule {}

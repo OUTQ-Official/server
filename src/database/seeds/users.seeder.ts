@@ -8,7 +8,6 @@ export default class UserSeeder implements Seeder {
     factoryManager: SeederFactoryManager,
   ): Promise<any> {
     const repository = dataSource.getRepository(Users);
-    console.log(factoryManager);
 
     await repository.insert([
       {

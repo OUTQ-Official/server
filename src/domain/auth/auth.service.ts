@@ -1,31 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { LoginRequestDTO, OauthLoginRequestDTO } from './dto/auth.dto';
+import { LoginRequestDTO } from './dto/auth.dto';
+import { GoogleUserType } from './interface/google.interface';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
+  constructor(private readonly userService: UsersService) {}
   async login(body: LoginRequestDTO) {
-    return body;
+    const { email, password } = body;
+    try {
+      const user = this.userService.findUserByEmail(email);
+
+      if (!user) {
+        //에러
+        return false;
+      }
+
+      
+    } catch (error) {}
   }
 
   signup() {
     return 'signup';
   }
 
-  async loginWithGoogle({ code }: OauthLoginRequestDTO) {
+  async loginWithGoogle(user: GoogleUserType) {
     try {
-      const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
-      const body = {
-        code,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_PW,
-        redirect_uri: process.env.GOOGLE_REDIRECT_URI,
-        grant_type: 'authorization_code',
-      };
+      const findUser = await this.userService.findUserByEmail(user.email);
     } catch (error) {}
-    return 'google';
-  }
-
-  async loginWithKakao({ code }: OauthLoginRequestDTO) {
-
   }
 }

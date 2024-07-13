@@ -2,7 +2,15 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
-  findAll() { }
+  async findUserByEmail(email: string) {
+    return 'email';
+  }
 
-  
+  async findUserByUserId(userId: string) {
+    return 'userId';
+  }
+
+  async createUser() {}
+
+  async updateUser() {}
 }

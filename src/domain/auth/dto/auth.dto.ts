@@ -20,8 +20,3 @@ export class SignupResponseDTO {
   password: string;
   username: string;
 }
-
-export class OauthLoginRequestDTO {
-  @IsNotEmpty()
-  code: string;
-}

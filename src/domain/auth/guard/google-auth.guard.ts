@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Observable } from 'rxjs';
 
 export class GoogleAuthGuard extends AuthGuard('google') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -14,13 +13,3 @@ export class GoogleAuthGuard extends AuthGuard('google') {
     return activate;
   }
 }
-
-// export class GoogleAuthGuard implements CanActivate {
-//   canActivate(
-//     context: ExecutionContext,
-//   ): boolean | Promise<boolean> | Observable<boolean> | any {
-//     console.log(context);
-//     console.log(context.switchToHttp());
-//     const request = context.switchToHttp().getRequest();
-//   }
-// }

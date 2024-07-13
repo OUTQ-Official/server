@@ -2,12 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as passport from 'passport';
-// import { HttpExceptionFilter } from './exceoption/http.exceoption';
+import { HttpExceptionFilter } from './exceoption/http.exceoption';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  // app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(process.env.PORT);
 }

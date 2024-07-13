@@ -8,9 +8,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginRequestDTO, OauthLoginRequestDTO } from './dto/auth.dto';
+import { LoginRequestDTO } from './dto/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GoogleAuthGuard } from './guard/google-auth.guard';
+import { Request, Response } from 'express';
+import { GoogleRequest } from './interface/google.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -26,18 +28,25 @@ export class AuthController {
     return this.authService.signup();
   }
 
+  //----------------GOOGLE----------------//
   @Get('google')
   @UseGuards(GoogleAuthGuard)
-  async authGoogle(@Req() req: Request) {
-    console.log('GET google/login - googleAuth 실행');
-  }
+  async authGoogle(@Req() req: Request) {}
 
   @Get('google/callback')
-  @UseGuards(GoogleAuthGuard)
-  async loginGoogle(@Req() req: Request, @Res() res: Response) {
-    console.log('GET oauth2/redirect/google - googleAuthRedirect 실행');
+  @UseGuards(AuthGuard('google'))
+  async loginGoogle(@Req() req: GoogleRequest, @Res() res: Response) {
+    const { user } = req;
 
-    // const { user } = req;
+    console.log(user.email, user.username);
+
+    if (user) {
+      res.redirect('http://localhost:3000');
+    } else {
+      res.redirect('http://localhost:3000/login');
+    }
+
+    return this.authService.loginWithGoogle(user);
     // return this.authService.loginWithGoogle(body);
   }
 
