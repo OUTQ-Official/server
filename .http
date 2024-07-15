@@ -13,6 +13,17 @@ Content-Type: application/json
   "email" : "yes7076@naver.com",
   "password" : "test123"
 }
+###
+
+#로컬 회원가입
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "email" : "yes7076@naver.com",
+  "password" : "test123",
+  "username" : "hongmyeongheon"
+}
 
 ###
 

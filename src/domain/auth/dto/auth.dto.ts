@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { UserModel } from 'src/domain/users/model/user.model';
 
 export class LoginRequestDTO {
   @IsEmail()
@@ -9,9 +10,15 @@ export class LoginRequestDTO {
   password: string;
 }
 
-export class SignupRequestDTO {
+export class SignupRequestDTO extends UserModel {
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
+
+  @IsNotEmpty()
   password: string;
+
+  @IsNotEmpty()
   username: string;
 }
 

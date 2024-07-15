@@ -8,11 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginRequestDTO } from './dto/auth.dto';
+import { LoginRequestDTO, SignupRequestDTO } from './dto/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { GoogleAuthGuard } from './guard/google-auth.guard';
 import { Request, Response } from 'express';
-import { GoogleRequest } from './interface/google.interface';
+import { GoogleUserRequest } from './interface/google-user.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -24,21 +23,25 @@ export class AuthController {
   }
 
   @Post('/signup')
-  signup() {
-    return this.authService.signup();
+  signup(@Body() body: SignupRequestDTO) {
+    return this.authService.signup({
+      ...body,
+      refreshToken: 'testToken',
+      signupAt: new Date(),
+    });
   }
 
   //----------------GOOGLE----------------//
   @Get('google')
-  @UseGuards(GoogleAuthGuard)
-  async authGoogle(@Req() req: Request) {}
+  @UseGuards(AuthGuard('google'))
+  async authGoogle(@Req() req: Request) {
+    console.log(req);
+  }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async loginGoogle(@Req() req: GoogleRequest, @Res() res: Response) {
+  async loginGoogle(@Req() req: GoogleUserRequest, @Res() res: Response) {
     const { user } = req;
-
-    console.log(user.email, user.username);
 
     if (user) {
       res.redirect('http://localhost:3000');

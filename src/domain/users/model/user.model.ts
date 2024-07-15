@@ -6,12 +6,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Board } from './board.entity';
+import { Board } from '../../../entity/board.entity';
 
-@Entity({ name: 'users' })
-export class Users {
+@Entity({ name: 'user' })
+export class UserModel {
   @PrimaryGeneratedColumn({ name: 'id' })
-  id: number;
+  id: string;
 
   @ApiProperty({ description: '유저 이메일', example: 'test123@naver.com' })
   @Column({ unique: true })
