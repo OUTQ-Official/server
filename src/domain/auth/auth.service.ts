@@ -3,7 +3,7 @@ import { LoginRequestDTO } from './dto/auth.dto';
 import { GoogleUserType } from './interface/google-user.interface';
 import { UsersService } from '../users/users.service';
 import bcrypt from 'bcrypt';
-import { UserModel } from '../users/model/user.model';
+
 import { SingupUserType } from './interface/local-user.interface';
 
 @Injectable()

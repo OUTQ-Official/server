@@ -4,15 +4,14 @@ import { AppService } from './app.service';
 import { UsersModule } from './domain/users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './domain/auth/auth.module';
-import configuration from './config/configuration';
+import configuration, { getEnvFilePath } from './config/evn.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from './config/db.config';
+import { TypeOrmConfigService } from './config/typeorm.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath:
-        process.env.NODE_ENV === 'development' ? '.env.dev' : '.env.prod',
+      envFilePath: getEnvFilePath(),
       load: [configuration],
       isGlobal: true,
     }),

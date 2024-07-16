@@ -1,12 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserModel } from 'src/domain/users/model/user.model';
 
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -31,8 +28,8 @@ export class Board {
   @CreateDateColumn({ name: 'create-at' })
   createAt: Date;
 
-  @ApiProperty({ description: '유저정보' })
-  @ManyToOne(() => UserModel)
-  @JoinColumn({ name: 'userId' })
-  users: UserModel;
+  // @ApiProperty({ description: '유저정보' })
+  // @ManyToOne(() => UserEntity)
+  // @JoinColumn({ name: 'userId' })
+  // users: UserEntity;
 }

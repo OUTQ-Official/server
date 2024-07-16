@@ -26,6 +26,8 @@ export class AuthController {
   signup(@Body() body: SignupRequestDTO) {
     return this.authService.signup({
       ...body,
+      id: 'test',
+      boards: [],
       refreshToken: 'testToken',
       signupAt: new Date(),
     });

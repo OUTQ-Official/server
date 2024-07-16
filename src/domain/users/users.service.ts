@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { UserModel } from './model/user.model';
+import { UserEntity } from '../../entity/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SingupUserType } from '../auth/interface/local-user.interface';
@@ -8,11 +8,11 @@ import { SingupUserType } from '../auth/interface/local-user.interface';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(UserModel)
-    @InjectRepository(UserModel)
-    private usersRepository: Repository<UserModel>,
+    @InjectModel(UserEntity)
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
   ) {}
-  async findUserByEmail(email: string): Promise<UserModel | null> {
+  async findUserByEmail(email: string): Promise<UserEntity | null> {
     return this.usersRepository.findOneBy({ email });
   }
 
@@ -20,7 +20,7 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id });
   }
 
-  async findUserAll(): Promise<UserModel[]> {
+  async findUserAll(): Promise<UserEntity[]> {
     return this.usersRepository.find();
   }
 
@@ -28,7 +28,7 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async createUser(body: SingupUserType): Promise<UserModel> {
+  async createUser(body: SingupUserType): Promise<UserEntity> {
     return this.usersRepository.create(body);
   }
 

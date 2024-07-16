@@ -3,13 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Board } from '../../../entity/board.entity';
 
-@Entity({ name: 'user' })
-export class UserModel {
+@Entity({ name: 'users' })
+export class UserEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: string;
 
@@ -33,7 +31,7 @@ export class UserModel {
   @CreateDateColumn({ name: 'create-at' })
   signupAt: Date;
 
-  @ApiProperty({ description: '작성한 게시글' })
-  @OneToMany(() => Board, (board) => board.users)
-  boards: Board[];
+  // @ApiProperty({ description: '작성한 게시글' })
+  // @OneToMany(() => Board, (board) => board.users)
+  // boards: Board[];
 }
