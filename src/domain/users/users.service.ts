@@ -13,7 +13,7 @@ export class UsersService {
     private usersRepository: Repository<UserEntity>,
   ) {}
   async findUserByEmail(email: string): Promise<UserEntity | null> {
-    return this.usersRepository.findOneBy({ email });
+    return this.usersRepository.findOneBy({ email: email });
   }
 
   async findUserById(id: string) {
@@ -29,7 +29,8 @@ export class UsersService {
   }
 
   async createUser(body: SingupUserType): Promise<UserEntity> {
-    return this.usersRepository.create(body);
+    const newUser = this.usersRepository.create(body);
+    return this.usersRepository.save(newUser);
   }
 
   async updateUser() {}

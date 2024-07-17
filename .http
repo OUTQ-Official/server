@@ -20,9 +20,9 @@ POST {{baseUrl}}/auth/signup
 Content-Type: application/json
 
 {
-  "email" : "yes7076@naver.com",
-  "password" : "test123",
-  "username" : "hongmyeongheon"
+  "email" : "test7076@test.com",
+  "password" : "abc12345!",
+  "username" : "홍명헌"
 }
 
 ###
@@ -30,6 +30,4 @@ Content-Type: application/json
 
 #GOOGLE 로그인
 GET {{baseUrl}}/auth/google
-
-
 ###

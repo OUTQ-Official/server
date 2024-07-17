@@ -11,26 +11,20 @@ import { AuthService } from './auth.service';
 import { LoginRequestDTO, SignupRequestDTO } from './dto/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import { GoogleUserRequest } from './interface/google-user.interface';
+import { GoogleUserRequestType } from './interface/google-user.interface';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
-  login(@Body() body: LoginRequestDTO) {
-    return this.authService.login(body);
+  login(@Body() loginDTO: LoginRequestDTO) {
+    return this.authService.login(loginDTO);
   }
 
   @Post('/signup')
-  signup(@Body() body: SignupRequestDTO) {
-    return this.authService.signup({
-      ...body,
-      id: 'test',
-      boards: [],
-      refreshToken: 'testToken',
-      signupAt: new Date(),
-    });
+  signup(@Body() signupDTO: SignupRequestDTO) {
+    return this.authService.signup(signupDTO);
   }
 
   //----------------GOOGLE----------------//
@@ -42,7 +36,7 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async loginGoogle(@Req() req: GoogleUserRequest, @Res() res: Response) {
+  async loginGoogle(@Req() req: GoogleUserRequestType, @Res() res: Response) {
     const { user } = req;
 
     if (user) {

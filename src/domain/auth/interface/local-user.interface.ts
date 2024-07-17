@@ -7,5 +7,5 @@ export interface SingupUserType {
   username: string;
   refreshToken: string;
   signupAt: Date;
-  boards: Board[];
+  boards?: Board[];
 }

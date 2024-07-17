@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { LoginRequestDTO } from './dto/auth.dto';
+import { LoginRequestDTO, SignupRequestDTO } from './dto/auth.dto';
 import { GoogleUserType } from './interface/google-user.interface';
 import { UsersService } from '../users/users.service';
 import bcrypt from 'bcrypt';
 
-import { SingupUserType } from './interface/local-user.interface';
-
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UsersService) {}
-  async login(body: LoginRequestDTO) {
-    const { email, password } = body;
+  async login(loginDTO: LoginRequestDTO) {
+    const { email, password } = loginDTO;
 
     try {
       const user = await this.userService.findUserByEmail(email);
@@ -22,24 +20,48 @@ export class AuthService {
         return user;
       }
     } catch (error) {
-      console.log('error');
+      console.log(error);
     }
   }
 
-  async signup(body: SingupUserType) {
+  async signup(signupDTO: SignupRequestDTO) {
     try {
-      const newUser = await this.userService.createUser(body);
-      console.log(newUser);
+      const user = await this.userService.findUserByEmail(signupDTO.email);
+
+      if (user) {
+        return '이미 가입한 회원';
+      }
+
+      const newUser = await this.userService.createUser({
+        ...signupDTO,
+        id: `테스트 아이디${Math.random()}`,
+        signupAt: new Date(),
+        refreshToken: `Test Token${Math.random()}`,
+        boards: [],
+      });
+
       return newUser;
     } catch (error) {
       console.log(error);
     }
   }
 
-  async loginWithGoogle(user: GoogleUserType) {
-    console.log(user);
-    // try {
-    //   const findUser = await this.userService.findUserByEmail(user.email);
-    // } catch (error) {}
+  async loginWithGoogle(googleUser: GoogleUserType) {
+    try {
+      const user = await this.userService.findUserByEmail(googleUser.email);
+
+      if (!user) {
+        const newUser = await this.userService.createUser({
+          ...googleUser,
+          id: `테스트 아이디${Math.random()}`,
+          password: 'google',
+          signupAt: new Date(),
+          refreshToken: `Test Token${Math.random()}`,
+          boards: [],
+        });
+
+        return newUser;
+      }
+    } catch (error) {}
   }
 }

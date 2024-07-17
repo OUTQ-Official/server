@@ -5,6 +5,6 @@ export interface GoogleUserType {
   username: string;
 }
 
-export interface GoogleUserRequest extends Request {
+export interface GoogleUserRequestType extends Request {
   user: GoogleUserType;
 }

@@ -1,5 +1,4 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { UserEntity } from 'src/entity/user.entity';
 
 export class LoginRequestDTO {
   @IsEmail()
@@ -10,7 +9,7 @@ export class LoginRequestDTO {
   password: string;
 }
 
-export class SignupRequestDTO extends UserEntity {
+export class SignupRequestDTO {
   @IsEmail()
   @IsNotEmpty()
   email: string;
