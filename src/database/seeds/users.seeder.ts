@@ -22,6 +22,17 @@ export default class UserSeeder implements Seeder {
     const userFactory = factoryManager.get(UserEntity);
     await userFactory.saveMany(5);
 
+    const testUser = repository.create({
+      id: 'testUser',
+      email: 'test@email.com',
+      password: 'password123!',
+      username: '테스트 유저',
+      refreshToken: 'Test Refresh Token',
+      signupAt: new Date(),
+    });
+
+    repository.save(testUser);
+
     // await repository.insert([
     //   {
     //     id: '2',

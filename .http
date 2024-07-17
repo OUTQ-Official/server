@@ -10,8 +10,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email" : "yes7076@naver.com",
-  "password" : "test123"
+  "email" : "yes7076@test.com",
+  "password" : "abc12345!"
 }
 ###
 

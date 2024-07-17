@@ -1,8 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { LoginRequestDTO, SignupRequestDTO } from './dto/auth.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  LoginRequestDTO,
+  LoginResponseDTO,
+  SignupRequestDTO,
+} from './dto/auth.dto';
 import { GoogleUserType } from './interface/google-user.interface';
 import { UsersService } from '../users/users.service';
 import bcrypt from 'bcrypt';
+import RES_MSG from 'src/constant/res-msg';
+import { ApiResponse } from 'src/interceptor/api.-response.interceptor';
 
 @Injectable()
 export class AuthService {
@@ -12,15 +18,21 @@ export class AuthService {
 
     try {
       const user = await this.userService.findUserByEmail(email);
-      console.log(user);
+
+      if (!user) {
+        throw new HttpException(RES_MSG.AUTH.NOT_EXIST, HttpStatus.BAD_REQUEST);
+      }
 
       const isMatch = bcrypt.compare(password, user.password);
 
       if (isMatch) {
-        return user;
+        console.log('hello');
       }
     } catch (error) {
-      console.log(error);
+      throw new HttpException(
+        RES_MSG.SERVER.UNKNOWN,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -29,7 +41,10 @@ export class AuthService {
       const user = await this.userService.findUserByEmail(signupDTO.email);
 
       if (user) {
-        return '이미 가입한 회원';
+        throw new HttpException(
+          RES_MSG.AUTH.ALREADY_EXIST,
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       const newUser = await this.userService.createUser({

@@ -9,6 +9,15 @@ export class LoginRequestDTO {
   password: string;
 }
 
+export class LoginResponseDTO {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsNotEmpty()
+  password: string;
+}
+
 export class SignupRequestDTO {
   @IsEmail()
   @IsNotEmpty()
