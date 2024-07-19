@@ -15,11 +15,11 @@ export class UserEntity {
   password: string;
 
   @ApiProperty({ description: '유저 이름', example: '홍명헌' })
-  @Column({ unique: true })
+  @Column()
   username: string;
 
   @ApiProperty({ description: '리프레쉬 토큰' })
-  @Column({ unique: true })
+  @Column({ unique: true, select: false })
   refreshToken: string;
 
   @ApiProperty({ description: '생성일', example: '2024-01-01' })

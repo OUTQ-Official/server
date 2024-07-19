@@ -6,10 +6,29 @@ import { PassportModule } from '@nestjs/passport';
 import { UsersService } from '../users/users.service';
 import { UserEntity } from '../../entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { KakaoStrategy } from './strategies/kakao-auth.strategy';
+import { LocalStrategy } from './strategies/local-auth.strategy';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { JwtConfigServices } from 'src/config/jwt.config';
 
 @Module({
-  imports: [PassportModule, TypeOrmModule.forFeature([UserEntity])],
+  imports: [
+    PassportModule,
+    TypeOrmModule.forFeature([UserEntity]),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useClass: JwtConfigServices,
+    }),
+  ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, UsersService, UserEntity],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    GoogleStrategy,
+    KakaoStrategy,
+    UsersService,
+    UserEntity,
+  ],
 })
 export class AuthModule {}

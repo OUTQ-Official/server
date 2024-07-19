@@ -15,7 +15,10 @@ export class LoginResponseDTO {
   email: string;
 
   @IsNotEmpty()
-  password: string;
+  username: string;
+
+  @IsNotEmpty()
+  accessToken: string;
 }
 
 export class SignupRequestDTO {
@@ -31,7 +34,10 @@ export class SignupRequestDTO {
 }
 
 export class SignupResponseDTO {
+  @IsEmail()
+  @IsNotEmpty()
   email: string;
-  password: string;
+
+  @IsNotEmpty()
   username: string;
 }

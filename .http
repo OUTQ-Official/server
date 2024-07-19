@@ -10,8 +10,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email" : "yes7076@test.com",
-  "password" : "abc12345!"
+  "email" : "testSignup@email.com",
+  "password" : "test123"
 }
 ###
 
@@ -20,9 +20,9 @@ POST {{baseUrl}}/auth/signup
 Content-Type: application/json
 
 {
-  "email" : "test7076@test.com",
-  "password" : "abc12345!",
-  "username" : "홍명헌"
+  "email" : "testSignup@email.com",
+  "password" : "test123",
+  "username" : "홍맹구"
 }
 
 ###

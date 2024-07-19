@@ -12,16 +12,28 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
   ) {}
+
   async findUserByEmail(email: string): Promise<UserEntity | null> {
     return this.usersRepository.findOneBy({ email: email });
   }
 
-  async findUserById(id: string) {
+  async findUserById(id: string): Promise<UserEntity | null> {
     return this.usersRepository.findOneBy({ id });
   }
 
   async findUserAll(): Promise<UserEntity[]> {
     return this.usersRepository.find();
+  }
+
+  async getUserPasswordByEmail(email: string): Promise<string> {
+    const userEntity = await this.usersRepository.findOne({
+      where: {
+        email: email,
+      },
+      select: ['password'],
+    });
+
+    return userEntity.password;
   }
 
   async removeUser(id: number): Promise<void> {
