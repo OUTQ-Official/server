@@ -25,6 +25,17 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
+  async getRefreshTokenByEmail(email: string): Promise<string> {
+    const userEntity = await this.usersRepository.findOne({
+      where: {
+        email: email,
+      },
+      select: ['refreshToken'],
+    });
+
+    return userEntity.refreshToken;
+  }
+
   async getUserPasswordByEmail(email: string): Promise<string> {
     const userEntity = await this.usersRepository.findOne({
       where: {

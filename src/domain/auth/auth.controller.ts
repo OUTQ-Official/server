@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   LoginResponseDTO,
@@ -9,27 +17,55 @@ import { AuthGuard } from '@nestjs/passport';
 import { GoogleUserRequestType } from './interface/google-user.interface';
 import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
 import { ApiResponse } from 'src/interceptor/http.interceptor';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { UserEntity } from 'src/entity/user.entity';
+import { RefreshAccessTokenResponseDTO } from './dto/jwt-auth.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  //----------------JWT----------------//
+  @Post('/refresh')
+  @UseGuards(AuthGuard('refresh'))
+  @ApiOperation({ description: '토큰 재발급' })
+  async refreshToken(
+    @Req() req: Request,
+  ): Promise<ApiResponse<RefreshAccessTokenResponseDTO>> {
+    const refreshToken = req.cookies.refreshToken;
+    return this.authService.refreshAccessToken(refreshToken);
+  }
 
   //----------------Local----------------//
   @Post('/login')
   @UseGuards(AuthGuard('local'))
   @ApiOperation({
     summary: '로컬 회원 로그인',
-    description: '유저를 생성한다.',
+    description: '유저 로그인 합니다.',
   })
   @ApiCreatedResponse({
-    description: '유저를 생성한다.',
+    description: '유저를 로그인 합니다',
     type: LoginResponseDTO,
   })
-  login(@Req() req: Request): Promise<ApiResponse<LoginResponseDTO>> | any {
+  async login(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<ApiResponse<LoginResponseDTO>> {
     const user = req.user as UserEntity;
-    return this.authService.login(user);
+
+    const result = await this.authService.login(user);
+
+    if (result.status) {
+      const refreshToken = await this.authService.getRefreshTokenByEmail(
+        user.email,
+      );
+
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+      });
+    }
+
+    return result;
   }
 
   @Post('/signup')

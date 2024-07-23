@@ -7,6 +7,8 @@ import { AuthModule } from './domain/auth/auth.module';
 import configuration, { getEnvFilePath } from './config/evn.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/typeorm.config';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtConfigServices } from './config/jwt.config';
 
 @Module({
   imports: [
@@ -19,6 +21,11 @@ import { TypeOrmConfigService } from './config/typeorm.config';
       imports: [ConfigModule],
       inject: [ConfigService],
       useClass: TypeOrmConfigService,
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useClass: JwtConfigServices,
     }),
     UsersModule,
     AuthModule,

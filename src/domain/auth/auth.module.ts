@@ -11,6 +11,7 @@ import { LocalStrategy } from './strategies/local-auth.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtConfigServices } from 'src/config/jwt.config';
+import { JwtStrategy, RefreshStrategy } from './strategies/jwt-auth.strategy';
 
 @Module({
   imports: [
@@ -24,6 +25,8 @@ import { JwtConfigServices } from 'src/config/jwt.config';
   controllers: [AuthController],
   providers: [
     AuthService,
+    JwtStrategy,
+    RefreshStrategy,
     LocalStrategy,
     GoogleStrategy,
     KakaoStrategy,
