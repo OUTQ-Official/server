@@ -12,11 +12,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtConfigServices } from 'src/config/jwt.config';
 import { JwtStrategy, RefreshStrategy } from './strategies/jwt-auth.strategy';
+import { AuthEntity } from 'src/entity/auth.entity';
 
 @Module({
   imports: [
     PassportModule,
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, AuthEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useClass: JwtConfigServices,

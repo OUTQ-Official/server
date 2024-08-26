@@ -14,37 +14,26 @@ export class UsersService {
   ) {}
 
   async findUserByEmail(email: string): Promise<UserEntity | null> {
-    return this.usersRepository.findOneBy({ email: email });
+    return this.usersRepository.findOneBy({ userEmail: email });
   }
 
   async findUserById(id: string): Promise<UserEntity | null> {
-    return this.usersRepository.findOneBy({ id });
+    return this.usersRepository.findOneBy({ userId: id });
   }
 
   async findUserAll(): Promise<UserEntity[]> {
     return this.usersRepository.find();
   }
 
-  async getRefreshTokenByEmail(email: string): Promise<string> {
-    const userEntity = await this.usersRepository.findOne({
-      where: {
-        email: email,
-      },
-      select: ['refreshToken'],
-    });
-
-    return userEntity.refreshToken;
-  }
-
   async getUserPasswordByEmail(email: string): Promise<string> {
     const userEntity = await this.usersRepository.findOne({
       where: {
-        email: email,
+        userEmail: email,
       },
-      select: ['password'],
+      select: ['userPwd'],
     });
 
-    return userEntity.password;
+    return userEntity.userPwd;
   }
 
   async removeUser(id: number): Promise<void> {

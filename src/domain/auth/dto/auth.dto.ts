@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { USER_REGSTR_TYPE, USER_ROLE_TYPE } from 'src/entity/user.entity';
 
 export class LoginRequestDTO {
   @IsEmail()
@@ -24,20 +25,50 @@ export class LoginResponseDTO {
 export class SignupRequestDTO {
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  userEmail: string;
 
   @IsNotEmpty()
-  password: string;
+  userName: string;
 
   @IsNotEmpty()
-  username: string;
+  userPwd: string;
+
+  @IsNotEmpty()
+  userRegstrType: USER_REGSTR_TYPE;
+
+  @IsNotEmpty()
+  companyName: string;
+
+  @IsNotEmpty()
+  companyPos: string;
+
+  @IsNotEmpty()
+  userRoleType: USER_ROLE_TYPE;
+
+  @IsNotEmpty()
+  userPhone: string;
 }
 
 export class SignupResponseDTO {
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  userEmail: string;
 
   @IsNotEmpty()
-  username: string;
+  userName: string;
+
+  @IsNotEmpty()
+  userRegstrType: USER_REGSTR_TYPE;
+
+  @IsNotEmpty()
+  companyName: string;
+
+  @IsNotEmpty()
+  companyPos: string;
+
+  @IsNotEmpty()
+  userRoleType: USER_ROLE_TYPE;
+
+  @IsNotEmpty()
+  userPhone: string;
 }

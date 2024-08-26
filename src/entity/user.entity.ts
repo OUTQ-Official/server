@@ -1,32 +1,76 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { AuthEntity } from './auth.entity';
 
-@Entity({ name: 'users' })
-export class UserEntity {
-  @PrimaryColumn({ name: 'id' })
-  id: string;
+export enum USER_REGSTR_TYPE {
+  LOCAL = 'local',
+  GOOGLE = 'google',
+  KAKAO = 'kakao',
+}
 
-  @ApiProperty({ description: '유저 이메일', example: 'test123@naver.com' })
-  @Column({ unique: true })
-  email: string;
+export enum USER_ROLE_TYPE {
+  CLIENT = 'client',
+  PRODUCTOR = 'productor',
+}
 
-  @ApiProperty({ description: '유저 비밀번호', example: 'abc12345!' })
-  @Column({ select: false })
-  password: string;
+@Entity({ name: 'tb_users' })
+export class UserEntity extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid', { name: 'user_id' })
+  @ApiProperty({ description: '회원일련번호', example: 'asfb1123' })
+  userId: string;
 
-  @ApiProperty({ description: '유저 이름', example: '홍명헌' })
-  @Column()
-  username: string;
+  @Column({ name: 'email', unique: true, type: 'varchar' })
+  @ApiProperty({ description: '이메일', example: 'test123@naver.com' })
+  userEmail: string;
 
-  @ApiProperty({ description: '리프레쉬 토큰' })
-  @Column({ unique: true, select: false })
-  refreshToken: string;
+  @Column({ name: 'name', type: 'varchar' })
+  @ApiProperty({ description: '이름', example: '홍길동' })
+  userName: string;
 
-  @ApiProperty({ description: '생성일', example: '2024-01-01' })
-  @CreateDateColumn({ name: 'create-at' })
-  signupAt: Date;
+  @Column({ name: 'pwd', select: false })
+  @ApiProperty({ description: '비밀번호', example: 'abc12345!' })
+  userPwd: string;
 
-  // @ApiProperty({ description: '작성한 게시글' })
-  // @OneToMany(() => Board, (board) => board.users)
-  // boards: Board[];
+  @Column({ name: 'regstr_type' })
+  @ApiProperty({ description: '가입유형', example: 'kakao' })
+  userRegstrType: USER_REGSTR_TYPE;
+
+  @Column({ name: 'company_name' })
+  @ApiProperty({ description: '회사명', example: 'Track1' })
+  companyName: string;
+
+  @Column({ name: 'company_pos' })
+  @ApiProperty({ description: '직책', example: '사원' })
+  companyPos: string;
+
+  @Column({ name: 'role_type' })
+  @ApiProperty({ description: '유저 타입', example: 'client' })
+  userRoleType: USER_ROLE_TYPE;
+
+  @Column({ name: 'phone' })
+  @ApiProperty({ description: '핸드폰번호', example: '010-0000-0000' })
+  userPhone: string;
+
+  @CreateDateColumn({ name: 'create_at', select: false, comment: '생성일' })
+  @ApiProperty({ description: '생성일', example: '2024-09-11' })
+  createdAt: Date;
+
+  @CreateDateColumn({ name: 'update_at', select: false, comment: '생성일' })
+  @ApiProperty({ description: '수정일', example: '2024-09-11' })
+  updateAt: Date;
+
+  @OneToOne(() => AuthEntity, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  auth: AuthEntity;
 }

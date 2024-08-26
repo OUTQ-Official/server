@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   LoginResponseDTO,
@@ -17,7 +9,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GoogleUserRequestType } from './interface/google-user.interface';
 import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
 import { ApiResponse } from 'src/interceptor/http.interceptor';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { UserEntity } from 'src/entity/user.entity';
 import { RefreshAccessTokenResponseDTO } from './dto/jwt-auth.dto';
 
@@ -47,23 +39,10 @@ export class AuthController {
     description: '유저를 로그인 합니다',
     type: LoginResponseDTO,
   })
-  async login(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<ApiResponse<LoginResponseDTO>> {
+  async login(@Req() req: Request): Promise<ApiResponse<LoginResponseDTO>> {
     const user = req.user as UserEntity;
 
     const result = await this.authService.login(user);
-
-    if (result.status) {
-      const refreshToken = await this.authService.getRefreshTokenByEmail(
-        user.email,
-      );
-
-      res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-      });
-    }
 
     return result;
   }

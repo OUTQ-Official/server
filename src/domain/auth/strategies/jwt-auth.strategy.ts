@@ -5,8 +5,8 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from '../auth.service';
 
 export interface PayloadType {
-  username: string;
-  email: string;
+  userName: string;
+  userEmail: string;
 }
 
 @Injectable()
@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async vallidate(payload: PayloadType) {
-    return { username: payload.username, email: payload.email };
+    return { username: payload.userName, email: payload.userEmail };
   }
 }
 
@@ -43,10 +43,10 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     });
   }
 
-  async validate(request: Request, payload: PayloadType) {
-    const refreshToken = request.cookies['refreshToken'];
-    return (
-      refreshToken === this.authService.getRefreshTokenByEmail(payload.email)
-    );
-  }
+  // async validate(request: Request, payload: PayloadType) {
+  //   const refreshToken = request.cookies['refreshToken'];
+  //   return (
+  //     refreshToken === this.authService.getRefreshTokenByEmail(payload.email)
+  //   );
+  // }
 }

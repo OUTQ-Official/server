@@ -14,28 +14,44 @@ import {
   errorHandler,
   success,
 } from 'src/interceptor/http.interceptor';
-
 import { UserEntity } from 'src/entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './strategies/jwt-auth.strategy';
 import { RefreshAccessTokenResponseDTO } from './dto/jwt-auth.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { InjectModel } from '@nestjs/sequelize';
+import { AuthEntity } from 'src/entity/auth.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private jwtService: JwtService,
+    @InjectModel(AuthEntity)
+    @InjectRepository(AuthEntity)
+    private authRepository: Repository<AuthEntity>,
   ) {}
 
-  // // ###### JWT ######
+  // ###### Auth ######
+  async createAuth(refreshToken: string) {
+    const newAuth = this.authRepository.create({
+      refreshToken: refreshToken,
+    });
+    return this.authRepository.save(newAuth);
+  }
+
+  // ###### JWT ######
   async refreshAccessToken(
     refreshToken: string,
   ): Promise<ApiResponse<RefreshAccessTokenResponseDTO>> {
     const decodedPayload: PayloadType = this.jwtService.verify(refreshToken);
 
-    const userEmail = decodedPayload.email;
-    const userRefreshToken =
-      await this.userService.getRefreshTokenByEmail(userEmail);
+    // const userEmail = decodedPayload.userEmail;
+    // const userRefreshToken =
+    //   await this.userService.getRefreshTokenByEmail(userEmail);
+    const userRefreshToken = 'test';
     if (!userRefreshToken) {
       throw new HttpException(RES_MSG.AUTH.INVALID, HttpStatus.BAD_REQUEST);
     }
@@ -60,26 +76,22 @@ export class AuthService {
 
   generateAccessToken(payload: PayloadType): string {
     return this.jwtService.sign({
-      email: payload.email,
-      username: payload.username,
+      email: payload.userEmail,
+      username: payload.userName,
     });
   }
 
   generateRefreshToken(payload: PayloadType): Promise<string> {
     return this.jwtService.signAsync(
       {
-        email: payload.email,
-        username: payload.username,
+        email: payload.userEmail,
+        username: payload.userName,
       },
       {
         secret: process.env.JWT_SECRET_KEY,
         expiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME,
       },
     );
-  }
-
-  async getRefreshTokenByEmail(email: string) {
-    return await this.userService.getRefreshTokenByEmail(email);
   }
 
   // ###### Local ######
@@ -111,8 +123,8 @@ export class AuthService {
     const accessToken = this.generateAccessToken(user);
 
     return success<LoginResponseDTO>({
-      email: user.email,
-      username: user.username,
+      email: user.userEmail,
+      username: user.userName,
       accessToken: accessToken,
     });
   }
@@ -121,7 +133,7 @@ export class AuthService {
     signupDTO: SignupRequestDTO,
   ): Promise<ApiResponse<SignupResponseDTO>> {
     try {
-      const user = await this.userService.findUserByEmail(signupDTO.email);
+      const user = await this.userService.findUserByEmail(signupDTO.userEmail);
 
       if (user) {
         throw new HttpException(
@@ -133,19 +145,19 @@ export class AuthService {
       const salt = bcrypt.genSaltSync(10);
       const newUser = await this.userService.createUser({
         ...signupDTO, // signupDTO : {email, username}
-        id: `테스트 아이디${Math.random()}`,
-        password: bcrypt.hashSync(signupDTO.password, salt),
-        signupAt: new Date(),
-        refreshToken: await this.generateRefreshToken({
-          email: signupDTO.email,
-          username: signupDTO.username,
-        }),
-        boards: [],
+        userId: uuidv4(),
+        userPwd: bcrypt.hashSync(signupDTO.userPwd, salt),
       });
 
+      const refreshToken = await this.generateRefreshToken({
+        userEmail: signupDTO.userEmail,
+        userName: signupDTO.userName,
+      });
+
+      await this.createAuth(refreshToken);
+
       return success<SignupResponseDTO>({
-        email: newUser.email,
-        username: newUser.username,
+        ...newUser,
       });
     } catch (error) {
       errorHandler(error);
@@ -160,24 +172,16 @@ export class AuthService {
       const user = await this.userService.findUserByEmail(googleUser.email);
 
       if (!user) {
-        await this.userService.createUser({
-          ...googleUser,
-          id: `테스트 아이디${Math.random()}`,
-          password: 'google',
-          signupAt: new Date(),
-          refreshToken: await this.generateRefreshToken({
-            email: googleUser.email,
-            username: googleUser.username,
-          }),
-          boards: [],
-        });
+        // await this.userService.createUser({
+        //   ...googleUser,
+        // });
       }
 
       const accessToken = this.generateAccessToken(user);
 
       return success<LoginResponseDTO>({
-        email: user.email,
-        username: user.username,
+        email: user.userEmail,
+        username: user.userName,
         accessToken: accessToken,
       });
     } catch (error) {
@@ -193,24 +197,24 @@ export class AuthService {
       const user = await this.userService.findUserByEmail(kakaoUser.email);
 
       if (!user) {
-        await this.userService.createUser({
-          ...kakaoUser,
-          id: `테스트 아이디${Math.random()}`,
-          password: 'kakao',
-          signupAt: new Date(),
-          refreshToken: await this.generateRefreshToken({
-            email: kakaoUser.email,
-            username: kakaoUser.username,
-          }),
-          boards: [],
-        });
+        // await this.userService.createUser({
+        //   ...kakaoUser,
+        //   id: `테스트 아이디${Math.random()}`,
+        //   password: 'kakao',
+        //   signupAt: new Date(),
+        //   refreshToken: await this.generateRefreshToken({
+        //     email: kakaoUser.email,
+        //     username: kakaoUser.username,
+        //   }),
+        //   boards: [],
+        // });
       }
 
       const accessToken = this.generateAccessToken(user);
 
       return success<LoginResponseDTO>({
-        email: user.email,
-        username: user.username,
+        email: user.userEmail,
+        username: user.userName,
         accessToken: accessToken,
       });
     } catch (error) {

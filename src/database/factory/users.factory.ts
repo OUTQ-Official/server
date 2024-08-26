@@ -3,12 +3,10 @@ import { setSeederFactory } from 'typeorm-extension';
 
 setSeederFactory(UserEntity, (faker) => {
   const user = new UserEntity();
-  user.id = faker.string.uuid();
-  user.email = faker.internet.email();
-  user.username = faker.internet.userName();
-  user.password = faker.internet.password();
-  user.signupAt = faker.date.anytime();
-  user.refreshToken = faker.string.uuid();
+  user.userId = faker.string.uuid();
+  user.userEmail = faker.internet.email();
+  user.userName = faker.internet.userName();
+  user.userPwd = faker.internet.password();
 
   return user;
 });
