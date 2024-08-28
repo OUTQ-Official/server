@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { UserEntity } from '../../entity/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SingupUserType } from '../auth/interface/local-user.interface';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -26,14 +26,13 @@ export class UsersService {
   }
 
   async getUserPasswordByEmail(email: string): Promise<string> {
-    const userEntity = await this.usersRepository.findOne({
-      where: {
-        userEmail: email,
-      },
-      select: ['userPwd'],
-    });
+    const { pwd } = await this.usersRepository
+      .createQueryBuilder('tb_users')
+      .where('email = :email', { email: email })
+      .select('pwd')
+      .getRawOne();
 
-    return userEntity.userPwd;
+    return pwd;
   }
 
   async removeUser(id: number): Promise<void> {
@@ -45,5 +44,15 @@ export class UsersService {
     return this.usersRepository.save(newUser);
   }
 
-  async updateUser() {}
+  async updateUser(body: any) {
+    const userId = 'testId';
+    const user = this.findUserById(userId);
+
+    const updateUser = {
+      ...user,
+      ...body,
+    };
+
+    return await this.usersRepository.save(updateUser);
+  }
 }

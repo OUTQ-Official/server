@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserEntity } from 'src/domain/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserEntity } from './user.entity';
+
 
 @Entity({ name: 'tb_auth' })
 export class AuthEntity {

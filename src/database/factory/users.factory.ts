@@ -1,4 +1,4 @@
-import { UserEntity } from 'src/entity/user.entity';
+import { UserEntity } from 'src/domain/users/entities/user.entity';
 import { setSeederFactory } from 'typeorm-extension';
 
 setSeederFactory(UserEntity, (faker) => {

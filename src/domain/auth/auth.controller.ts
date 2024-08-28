@@ -10,8 +10,8 @@ import { GoogleUserRequestType } from './interface/google-user.interface';
 import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
 import { ApiResponse } from 'src/interceptor/http.interceptor';
 import { Request } from 'express';
-import { UserEntity } from 'src/entity/user.entity';
 import { RefreshAccessTokenResponseDTO } from './dto/jwt-auth.dto';
+import { UserEntity } from '../users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -39,7 +39,9 @@ export class AuthController {
     description: '유저를 로그인 합니다',
     type: LoginResponseDTO,
   })
-  async login(@Req() req: Request): Promise<ApiResponse<LoginResponseDTO>> {
+  async login(
+    @Req() req: Request,
+  ): Promise<ApiResponse<LoginResponseDTO | any>> {
     const user = req.user as UserEntity;
 
     const result = await this.authService.login(user);

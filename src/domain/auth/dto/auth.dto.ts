@@ -1,22 +1,25 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { USER_REGSTR_TYPE, USER_ROLE_TYPE } from 'src/entity/user.entity';
+import {
+  USER_REGSTR_TYPE,
+  USER_ROLE_TYPE,
+} from 'src/domain/users/entities/user.entity';
 
 export class LoginRequestDTO {
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  userEmail: string;
 
   @IsNotEmpty()
-  password: string;
+  userPwd: string;
 }
 
 export class LoginResponseDTO {
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  userEmail: string;
 
   @IsNotEmpty()
-  username: string;
+  userName: string;
 
   @IsNotEmpty()
   accessToken: string;

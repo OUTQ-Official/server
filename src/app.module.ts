@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/typeorm.config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigServices } from './config/jwt.config';
+import { CompanyModule } from './domain/company/company.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { JwtConfigServices } from './config/jwt.config';
     }),
     UsersModule,
     AuthModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

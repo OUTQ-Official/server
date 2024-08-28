@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { loadEnv } from './evn.config';
-import { dataSourceOptions } from 'src/database/data-source';
+import { dataSourceOptions } from 'src/config/data-source.config';
 
 loadEnv();
 

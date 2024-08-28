@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AuthEntity } from 'src/domain/auth/entities/auth.entity';
+import { CompanyEntity } from 'src/domain/company/entities/company.entity';
 import {
   BaseEntity,
   Column,
@@ -8,7 +10,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { AuthEntity } from './auth.entity';
 
 export enum USER_REGSTR_TYPE {
   LOCAL = 'local',
@@ -73,4 +74,8 @@ export class UserEntity extends BaseEntity {
   })
   @JoinColumn()
   auth: AuthEntity;
+
+  @OneToOne(() => CompanyEntity, {})
+  @JoinColumn()
+  company: CompanyEntity;
 }

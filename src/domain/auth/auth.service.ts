@@ -14,15 +14,15 @@ import {
   errorHandler,
   success,
 } from 'src/interceptor/http.interceptor';
-import { UserEntity } from 'src/entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadType } from './strategies/jwt-auth.strategy';
 import { RefreshAccessTokenResponseDTO } from './dto/jwt-auth.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { InjectModel } from '@nestjs/sequelize';
-import { AuthEntity } from 'src/entity/auth.entity';
+import { AuthEntity } from 'src/domain/auth/entities/auth.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserEntity } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -97,17 +97,17 @@ export class AuthService {
   // ###### Local ######
   async validateUser(loginDTO: LoginRequestDTO): Promise<UserEntity | null> {
     try {
-      const user = await this.userService.findUserByEmail(loginDTO.email);
+      const user = await this.userService.findUserByEmail(loginDTO.userEmail);
 
       if (!user) {
         throw new HttpException(RES_MSG.AUTH.NOT_EXIST, HttpStatus.BAD_REQUEST);
       }
 
-      const userPassword = await this.userService.getUserPasswordByEmail(
-        loginDTO.email,
+      const userPwd = await this.userService.getUserPasswordByEmail(
+        loginDTO.userEmail,
       );
 
-      const isMatch = bcrypt.compare(userPassword, loginDTO.password);
+      const isMatch = bcrypt.compare(userPwd, loginDTO.userPwd);
 
       if (isMatch) {
         return user;
@@ -123,8 +123,8 @@ export class AuthService {
     const accessToken = this.generateAccessToken(user);
 
     return success<LoginResponseDTO>({
-      email: user.userEmail,
-      username: user.userName,
+      userEmail: user.userEmail,
+      userName: user.userName,
       accessToken: accessToken,
     });
   }
@@ -180,8 +180,8 @@ export class AuthService {
       const accessToken = this.generateAccessToken(user);
 
       return success<LoginResponseDTO>({
-        email: user.userEmail,
-        username: user.userName,
+        userEmail: user.userEmail,
+        userName: user.userName,
         accessToken: accessToken,
       });
     } catch (error) {
@@ -213,8 +213,8 @@ export class AuthService {
       const accessToken = this.generateAccessToken(user);
 
       return success<LoginResponseDTO>({
-        email: user.userEmail,
-        username: user.userName,
+        userEmail: user.userEmail,
+        userName: user.userName,
         accessToken: accessToken,
       });
     } catch (error) {

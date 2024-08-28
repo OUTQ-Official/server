@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { loadEnv } from '../config/evn.config';
+import { loadEnv } from './evn.config';
 
 loadEnv();
 

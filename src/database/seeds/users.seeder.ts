@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/entity/user.entity';
+import { UserEntity } from 'src/domain/users/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 
